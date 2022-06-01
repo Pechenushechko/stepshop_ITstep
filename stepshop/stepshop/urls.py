@@ -16,14 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from stepshop.views import index
-from stepshop.views import contact, about
+from stepshop.views import index, contact, about
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
-    path('contacts/', contact),
+    path('contact/', contact),
     path('about/', about),
-    path('products/', include('products.urls'))
+    path('products/', include('products.urls', namespace = 'products'))
 ]
