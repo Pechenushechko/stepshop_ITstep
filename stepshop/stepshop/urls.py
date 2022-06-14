@@ -23,11 +23,12 @@ from stepshop.views import index, contact, about
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index),
-    path('contact/', contact),
-    path('about/', about),
+    path('', index, name='index'),
+    path('contact/', contact, name="contacts"),
+    path('about/', about, name='about'),
     path('products/', include('products.urls', namespace='products')),
-    path('auth/', include('authapp.urls', namespace='auth'))
+    path('auth/', include('authapp.urls', namespace='auth')),
+    path('basket/', include('basketapp.urls', namespace='basket'))
 ]
 
 if settings.DEBUG:
