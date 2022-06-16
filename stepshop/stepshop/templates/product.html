@@ -27,7 +27,9 @@
               <p>{{ product.short_desc }} </p>
               <p>{{ product.description }} </p>
               <span>{{ product.quantity }} left on stock</span>
-              <button type="button" class="button">Order</button>
+              <button type="button" class="button">
+                <a href="{% url 'basket:add' product.pk %}" class="text-light">Order</a>
+              </button>
               <div class="down-content">
                 <div class="categories">
                   <h6>Category: <span><a href="{% url 'products:category' product.category.pk %">{{ product.category }}</a></span></h6>
