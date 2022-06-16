@@ -17,11 +17,27 @@ class Basket(models.Model):
     )
 
     quantity = models.PositiveIntegerField(
-        verbose_name='quantity',
+        verbose_name='Quantity',
         default=0,
     )
 
     add_datetime = models.DateTimeField(
-        verbose_name="time",
+        verbose_name='Time',
         auto_now_add=True,
     )
+
+    @property
+    def product_cost(self):
+        return self.product.price * self.quantity
+
+    @property
+    def total_quantity(self):
+        _items = Basket.objects.filter(user=self.user)
+        _total_quantity = sum(list(map(lambda x: x.quantity, _items)))
+        return _total_quantity
+
+    @property
+    def total_cost(self):
+        _items = Basket.objects.filter(user=self.user)
+        _total_cost = sum(list(map(lambda x: x.product_cost, _items)))
+        return _total_cost

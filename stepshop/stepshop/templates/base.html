@@ -15,13 +15,14 @@
 
     <!-- Bootstrap core CSS -->
 <!--    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">-->
-    <link href="/static/stepshop/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
 
     <!-- Additional CSS Files -->
-    <link rel="stylesheet" href="/static/stepshop/assets/css/fontawesome.css' %}">
-    <link rel="stylesheet" href="/static/stepshop/assets/css/tooplate-main.css' %}">
-    <link rel="stylesheet" href="/static/stepshop/assets/css/owl.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/fontawesome.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/tooplate-main.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/owl.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
     {% block css %}{% endblock %}
 
   </head>
@@ -31,14 +32,37 @@
     <div id="pre-header">
       <div class="container">
         <div class="row">
-          <div class="col-md-12">
-            <span>
-              {% if user.is_authenticated %}
-                {{ user.username }}
-              {% else %}
-                <a href="/admin/login/">Login</a>
+          <div class="col-md-12 d-flex justify-content-end align-items-center text-light">
+
+            {% if user.is_authenticated %}
+              {% if user.is_superuser %}
+                <a href="/admin/" class="nav-link">
+                  <span>Admin</span>
+                </a>
+                |
               {% endif %}
-            </span>
+
+              <a href="{% url 'auth:edit' %}" class="nav-link">
+                <span>{{ user.first_name|default:'User' }}</span>
+              </a>
+              |
+            <a href="{% url 'auth:logout' %}" class="nav-link">
+              <span>Exit</span>
+            </a>
+            {% else %}
+              <a href="{% url 'auth:login' %}" class="nav-link">
+                <span>Sign in</span>
+              </a>
+            {% endif %}
+            |
+            {% if basket %}
+              <a href="{% url 'basket:view' %}" class="basket">
+                <span>{{ basket.0.total_quantity }}</span>
+              </a>
+
+            <span>${{ basket.0.total_cost|floatformat:"g" }}</span>
+            {% endif %}
+
           </div>
         </div>
       </div>
@@ -53,79 +77,13 @@
 
 
     <!-- Subscribe Form Starts Here -->
-    <div class="subscribe-form">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="section-heading">
-              <div class="line-dec"></div>
-              <h1>Subscribe on PIXIE now!</h1>
-            </div>
-          </div>
-          <div class="col-md-8 offset-md-2">
-            <div class="main-content">
-              <p>Integer vel turpis ultricies, lacinia ligula id, lobortis augue. Vivamus porttitor dui id dictum efficitur. Phasellus vel interdum elit.</p>
-              <div class="container">
-                <form id="subscribe" action="" method="get">
-                  <div class="row">
-                    <div class="col-md-7">
-                      <fieldset>
-                        <input name="email" type="text" class="form-control" id="email"
-                        onfocus="if(this.value == 'Your Email...') { this.value = ''; }"
-                    	onBlur="if(this.value == '') { this.value = 'Your Email...';}"
-                    	value="Your Email..." required="">
-                      </fieldset>
-                    </div>
-                    <div class="col-md-5">
-                      <fieldset>
-                        <button type="submit" id="form-submit" class="button">Subscribe Now!</button>
-                      </fieldset>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+
     <!-- Subscribe Form Ends Here -->
 
 
 
     <!-- Footer Starts Here -->
-    <div class="footer">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="logo">
-              <img src="/static/stepshop/assets/images/header-logo.png' %}" alt="">
-            </div>
-          </div>
-          <div class="col-md-12">
-            <div class="footer-menu">
-              <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Help</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">How It Works ?</a></li>
-                <li><a href="#">Contact Us</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-12">
-            <div class="social-icons">
-              <ul>
-                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                <li><a href="#"><i class="fa fa-rss"></i></a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+
     <!-- Footer Ends Here -->
 
 
@@ -135,7 +93,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="copyright-text">
-              <p>Copyright &copy; 2019&ndash;{% now "Y" %} Бобёр Inc.</p>
+              <p>Copyright &copy; 2000&ndash;{% now "Y" %}  Lester corp.</p>
             </div>
           </div>
         </div>
@@ -145,13 +103,16 @@
 
 
     <!-- Bootstrap core JavaScript -->
-    <script src="/static/stepshop/vendor/jquery/jquery.min.js' %}"></script>
-    <script src="/static/stepshop/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
 
     <!-- Additional Scripts -->
-    <script src="/static/stepshop/assets/js/custom.js' %}"></script>
-    <script src="/static/stepshop/assets/js/owl.js' %}"></script>
+    <script src="{% static 'assets/js/custom.js' %}"></script>
+    <script src="{% static 'assets/js/owl.js' %}"></script>
+
+    {% block js %}{% endblock %}
+
 
     <script language = "text/Javascript">
       cleared[0] = cleared[1] = cleared[2] = 0; //set a cleared flag for each field
@@ -163,8 +124,6 @@
           }
       }
     </script>
-
-
 
 
   </body>
