@@ -2,12 +2,16 @@ from django.contrib import auth
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from authapp.forms import ShopUserLoginForm
+from authapp.forms import ShopUserLoginForm, UserCreationForm, UserChangeForm
+
+
 
 def login(request):
     title = 'Login'
 
     login_form = ShopUserLoginForm(data=request.POST)
+
+    _next = request.GET['next'] if 'next' in request.GET.keys() else ''
 
     if request.method == 'POST' and login_form.is_valid():
         username = request.POST['username']
@@ -17,11 +21,15 @@ def login(request):
 
         if user and user.is_active:
             auth.login(request, user)
+            if 'next' in request.POST.keys():
+                return HttpResponseRedirect(request.POST['next'])
+
             return HttpResponseRedirect(reverse('index'))
 
     context = {
         'title': title,
         'login_form': login_form,
+        'next': _next
     }
 
     return render(request, 'authapp/login.html', context)
@@ -31,33 +39,33 @@ def register(request):
     title = 'registration'
 
     if request.method == 'POST':
-        register_form = ShopUserRegisterForm(request.POST, request.FILES)
+        register_form = UserCreationForm(request.POST, request.FILES)
 
         if register_form.is_valid():
             register_form.save()
             return HttpResponseRedirect(reverse('auth:login'))
     else:
-        register_form = ShopUserRegisterForm()
+        register_form = UserCreationForm()
 
     context = {
         'title': title,
         'register_form': register_form,
     }
 
-    return render(request, 'authapp/register.html', context)
+    return render(request, 'authapp/_register.html', context)
 
 
 def edit(request):
     title = 'Edit'
 
     if request.method == 'POST':
-        edit_form = ShopUserEditForm(request.POST, request.FILES, instance=request.user)
+        edit_form = UserChangeForm(request.POST, request.FILES, instance=request.user)
 
         if edit_form.is_valid():
             edit_form.save()
             return HttpResponseRedirect(reverse('auth:edit'))
     else:
-        edit_form = ShopUserEditForm(instance=request.user)
+        edit_form = UserChangeForm(instance=request.user)
 
     context = {
         'title': title,
